@@ -1,4 +1,4 @@
-service: 'sveltekit-app'
+service: 'habitpaper'
 
 frameworkVersion: "3"
 

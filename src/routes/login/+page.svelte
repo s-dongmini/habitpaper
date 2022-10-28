@@ -1,21 +1,24 @@
 <script lang="ts">
     import { fly } from "svelte/transition";
+    import { loginPOST } from "$lib/_api";
 
     let id: string = "";
     let password: string = "";
     let error: string = "";
     let errorCount: number = 0;
 
-    function handleSubmit(e: SubmitEvent) {
+    async function handleSubmit(e: SubmitEvent) {
+        e.preventDefault();
         if (!id) {
             error = "Please enter the id";
             errorCount++;
-            e.preventDefault();
         } else if (!password) {
             error = "Please enter the password";
             errorCount++;
             e.preventDefault();
         }
+        const result = await loginPOST(id, password);
+        console.log(typeof result);
     }
 </script>
 

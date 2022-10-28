@@ -1,29 +1,36 @@
 <script lang="ts">
     import { fly } from "svelte/transition";
+    import { signupPOST } from "$lib/_api";
 
     let id: string = "";
-    let password: string = "";
-    let confirmPassword: string = "";
+    let first_password: string = "";
+    let confirm_password: string = "";
     let error: string = "";
     let errorCount: number = 0;
 
-    function handleSubmit(e: SubmitEvent) {
+    async function handleSubmit(e: SubmitEvent) {
+        e.preventDefault();
         if (!id) {
             error = "Please enter the id";
             errorCount++;
-            e.preventDefault();
-        } else if (!password) {
+        } else if (!first_password) {
             error = "Please enter the password";
             errorCount++;
-            e.preventDefault();
-        } else if (!confirmPassword) {
+        } else if (!confirm_password) {
             error = "Please enter the confirm password";
             errorCount++;
-            e.preventDefault();
-        } else if (password !== confirmPassword) {
+        } else if (first_password !== confirm_password) {
             error = "Passwords do not match";
             errorCount++;
-            e.preventDefault();
+        } else {
+            const result = await signupPOST(id, first_password, confirm_password);
+            if (result.status === 200) {
+                window.location.href = "/";
+            } else {
+                error = await result.json();
+                errorCount++;
+                console.log(error);
+            }
         }
     }
 </script>
@@ -56,10 +63,10 @@
             <input
                 class="transition mt-5 p-2 outline-none shadow-lg focus:shadow-violet-200"
                 type="password"
-                id="password"
-                name="password"
+                id="first_password"
+                name="first_password"
                 placeholder="PASSWORD"
-                bind:value={password}
+                bind:value={first_password}
             />
             <input
                 class="transition mt-5 p-2 outline-none shadow-lg focus:shadow-violet-200"
@@ -67,7 +74,7 @@
                 id="confirm-password"
                 name="confirm-password"
                 placeholder="Confirm PASSWORD"
-                bind:value={confirmPassword}
+                bind:value={confirm_password}
             />
             {#if error}
                 {#key errorCount}
