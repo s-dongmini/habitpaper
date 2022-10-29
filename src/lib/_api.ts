@@ -38,3 +38,33 @@ export async function signupPOST(id: string, first_password: string, confirm_pas
     );
     return response;
 }
+
+export async function postGET(id: string) {
+	const response = await fetch(apiURL + `post/${id}`);
+	const json = await response.json();
+	const items = json.Items;
+	return items;
+}
+/*
+export async function postPOST(
+	user: string,
+    item: object
+) {
+	const headers = new Headers({
+		'Content-Type': 'application/json'
+	});
+	const raw = JSON.stringify({
+		user,
+        item
+	});
+	const requestOptions: RequestInit = {
+		method: 'POST',
+		headers: headers,
+		body: raw,
+		redirect: 'follow'
+	};
+	const response = await fetch(apiURL + `post/${user}`, requestOptions);
+	const item = await response.json();
+
+	return item;
+}*/

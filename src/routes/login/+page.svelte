@@ -1,24 +1,23 @@
 <script lang="ts">
     import { fly } from "svelte/transition";
     import { loginPOST } from "$lib/_api";
+    import type { ActionData } from "./$types";
+
+    export let form: ActionData;
 
     let id: string = "";
     let password: string = "";
     let error: string = "";
     let errorCount: number = 0;
 
-    async function handleSubmit(e: SubmitEvent) {
-        e.preventDefault();
+    function handleSubmit(e: SubmitEvent) {
         if (!id) {
             error = "Please enter the id";
             errorCount++;
         } else if (!password) {
             error = "Please enter the password";
             errorCount++;
-            e.preventDefault();
         }
-        const result = await loginPOST(id, password);
-        console.log(typeof result);
     }
 </script>
 
@@ -38,6 +37,7 @@
         </div>
         <form
             class="flex flex-col items-center relative"
+            method="post"
             action=""
             on:submit={handleSubmit}
         >
@@ -66,6 +66,13 @@
                         {error}
                     </p>
                 {/key}
+            {:else if form?.error}
+                <p
+                    in:fly={{ y: 20 }}
+                    class="text-red-700 text-xs m-2 absolute top-72"
+                >
+                    {form.message}
+                </p>
             {/if}
             <input
                 class="mt-10 p-3 w-full outline-none rounded-full shadow-lg focus:shadow-violet-200 text-slate-800 font-semibold"
